@@ -10,8 +10,7 @@ function WebsiteExisting({
     const options = [
         "Nein, ich brauche eine neue Website",
         "Ja, aber sie ist veraltet",
-        "Ja, ich möchte sie verbessern lassen",
-        "Ich bin mir noch unsicher",
+        "Ja, ich möchte sie verbessern lassen"
     ];
 
     return (
