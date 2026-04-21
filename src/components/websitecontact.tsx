@@ -28,7 +28,7 @@ function WebsiteContact({
             <div className="question">
                 <h2>Fast geschafft – wie dürfen wir Sie erreichen?</h2>
             </div>
-            <form action="website_last" method="POST">
+            <form className="website_ct_form" action="website_last" method="POST">
                 <div className="contact_fields">
                     <input
                         className="contact_input"

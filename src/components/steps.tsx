@@ -188,7 +188,19 @@ function Steps() {
     if (service === "website_last") {
         return (
             <>
-                <WebsiteLast />
+                <WebsiteLast goals={goals}
+                    existingWebsite={existingWebsite}
+                    websitePages={websitePages}
+                    websiteAssets={websiteAssets}
+                    websiteBudget={websiteBudget}
+                    websiteBudget={websiteBudget}
+                    websiteTimeframe={websiteTimeframe}
+                    name={name}
+                    company={company}
+                    email={email}
+                    phone={phone}
+                    message={message}
+                />
             </>
         );
     }
