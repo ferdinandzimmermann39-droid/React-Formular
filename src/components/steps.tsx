@@ -187,21 +187,33 @@ function Steps() {
     }
     if (service === "website_last") {
         return (
-            <>
-                <WebsiteLast goals={goals}
-                    existingWebsite={existingWebsite}
-                    websitePages={websitePages}
-                    websiteAssets={websiteAssets}
-                    websiteBudget={websiteBudget}
-                    websiteBudget={websiteBudget}
-                    websiteTimeframe={websiteTimeframe}
-                    name={name}
-                    company={company}
-                    email={email}
-                    phone={phone}
-                    message={message}
-                />
-            </>
+            <section className="questionform">
+                <div className="questformcontent">
+                    <WebsiteLast
+                        goals={goals}
+                        existingWebsite={existingWebsite}
+                        websitePages={websitePages}
+                        websiteAssets={websiteAssets}
+                        websiteBudget={websiteBudget}
+                        websiteTimeframe={websiteTimeframe}
+                        name={name}
+                        company={company}
+                        email={email}
+                        phone={phone}
+                        message={message}
+                    />
+
+                    <div className="q_options">
+                        <button
+                            type="button"
+                            className="step_button"
+                            onClick={() => setService("website")}
+                        >
+                            <div><h5>Zurück</h5></div>
+                        </button>
+                    </div>
+                </div>
+            </section>
         );
     }
     if (service === "logo_website") {
