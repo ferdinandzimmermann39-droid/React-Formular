@@ -28,47 +28,48 @@ function WebsiteContact({
             <div className="question">
                 <h2>Fast geschafft – wie dürfen wir Sie erreichen?</h2>
             </div>
+            <form action="website_last" method="POST">
+                <div className="contact_fields">
+                    <input
+                        className="contact_input"
+                        type="text"
+                        placeholder="Name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
 
-            <div className="contact_fields">
-                <input
-                    className="contact_input"
-                    type="text"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
+                    <input
+                        className="contact_input"
+                        type="text"
+                        placeholder="Unternehmen oder Projektname"
+                        value={company}
+                        onChange={(e) => setCompany(e.target.value)}
+                    />
 
-                <input
-                    className="contact_input"
-                    type="text"
-                    placeholder="Unternehmen oder Projektname"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                />
+                    <input
+                        className="contact_input"
+                        type="email"
+                        placeholder="E-Mail-Adresse"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
 
-                <input
-                    className="contact_input"
-                    type="email"
-                    placeholder="E-Mail-Adresse"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+                    <input
+                        className="contact_input"
+                        type="tel"
+                        placeholder="Telefonnummer"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                    />
 
-                <input
-                    className="contact_input"
-                    type="tel"
-                    placeholder="Telefonnummer"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                />
-
-                <textarea
-                    className="contact_textarea"
-                    placeholder="Zusatzwünsche oder kurze Beschreibung"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-            </div>
+                    <textarea
+                        className="contact_textarea"
+                        placeholder="Zusatzwünsche oder kurze Beschreibung"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                    />
+                </div>
+            </form>
         </>
     );
 }

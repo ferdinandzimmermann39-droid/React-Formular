@@ -28,6 +28,7 @@ function WebsiteExisting({
                             value={option}
                             checked={existingWebsite === option}
                             onChange={(e) => setExistingWebsite(e.target.value)}
+                            required
                         />
                         <span>{option}</span>
                     </label>

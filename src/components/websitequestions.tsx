@@ -5,13 +5,18 @@ type WebsiteQuestionProps = {
     setGoals: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
+
+
 function WebsiteQuestions({ goals, setGoals }: WebsiteQuestionProps) {
+
+
     return (
         <>
             <form className="choice_form">
                 <div className="question">
                     <h2>Was soll Ihre Website für Sie leisten?</h2>
                 </div>
+
                 <WebsiteQuestion
                     goals={goals}
                     setGoals={setGoals}
@@ -45,6 +50,7 @@ function WebsiteQuestions({ goals, setGoals }: WebsiteQuestionProps) {
             </form>
         </>
     );
+
 };
 
 export default WebsiteQuestions

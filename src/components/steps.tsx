@@ -6,10 +6,11 @@ import WebsitePages from "./websitepages.tsx";
 import WebsiteAssets from "./websiteassets.tsx";
 import WebsiteTimeframe from "./websitetimeframe.tsx";
 import WebsiteContact from "./websitecontact.tsx";
+import WebsiteLast from "./website_last.tsx";
 
-type Service = "start" | "logo" | "website" | "logo_website";
+type Service = "start" | "logo" | "website" | "logo_website" | "website_last";
 
-function StartQuestions() {
+function Steps() {
     const [service, setService] = useState<Service>("start");
     const [websiteStepIndex, setWebsiteStepIndex] = useState(0);
 
@@ -128,6 +129,35 @@ function StartQuestions() {
                             type="button"
                             className="step_button"
                             onClick={() => {
+                                if (websiteStepIndex === 0 && goals.length === 0) {
+                                    return;
+                                }
+                                if (websiteStepIndex === 1 && existingWebsite === "") {
+                                    return;
+                                }
+                                if (websiteStepIndex === 2 && websitePages.length === 0) {
+                                    return;
+                                }
+                                if (websiteStepIndex === 3 && websiteAssets === "") {
+                                    return;
+                                }
+                                if (websiteStepIndex === 4 && websiteBudget === "") {
+                                    return;
+                                }
+                                if (websiteStepIndex === 5 && websiteTimeframe === "") {
+                                    return;
+                                }
+                                if (
+                                    websiteStepIndex === 6 &&
+                                    (
+                                        name.trim() === "" ||
+                                        company.trim() === "" ||
+                                        email.trim() === "" ||
+                                        phone.trim() === ""
+                                    )
+                                ) {
+                                    return;
+                                }
                                 if (isLastStep) {
                                     console.log({
                                         goals,
@@ -142,6 +172,7 @@ function StartQuestions() {
                                         phone,
                                         message,
                                     });
+                                    setService("website_last");
                                 } else {
                                     setWebsiteStepIndex((prev) => prev + 1);
                                 }
@@ -154,7 +185,13 @@ function StartQuestions() {
             </section>
         );
     }
-
+    if (service === "website_last") {
+        return (
+            <>
+                <WebsiteLast />
+            </>
+        );
+    }
     if (service === "logo_website") {
         return (
             <section className="questionform">
@@ -234,4 +271,4 @@ function StartQuestions() {
     );
 }
 
-export default StartQuestions;
+export default Steps;
