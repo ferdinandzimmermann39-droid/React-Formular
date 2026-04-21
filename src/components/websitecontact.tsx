@@ -28,46 +28,62 @@ function WebsiteContact({
             <div className="question">
                 <h2>Fast geschafft – wie dürfen wir Sie erreichen?</h2>
             </div>
-            <form className="website_ct_form" action="website_last" method="POST">
+
+            <form className="website_ct_form">
                 <div className="contact_fields">
-                    <input
-                        className="contact_input"
-                        type="text"
-                        placeholder="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
+                    <div className="contact_field">
+                        <label className="contact_label">Name</label>
+                        <input
+                            className="contact_input"
+                            type="text"
+                            placeholder="Ihr Name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
 
-                    <input
-                        className="contact_input"
-                        type="text"
-                        placeholder="Unternehmen oder Projektname"
-                        value={company}
-                        onChange={(e) => setCompany(e.target.value)}
-                    />
+                    <div className="contact_field">
+                        <label className="contact_label">Unternehmen oder Projektname</label>
+                        <input
+                            className="contact_input"
+                            type="text"
+                            placeholder="Unternehmen oder Projektname"
+                            value={company}
+                            onChange={(e) => setCompany(e.target.value)}
+                        />
+                    </div>
 
-                    <input
-                        className="contact_input"
-                        type="email"
-                        placeholder="E-Mail-Adresse"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <div className="contact_field">
+                        <label className="contact_label">E-Mail-Adresse</label>
+                        <input
+                            className="contact_input"
+                            type="email"
+                            placeholder="ihre@email.de"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
 
-                    <input
-                        className="contact_input"
-                        type="tel"
-                        placeholder="Telefonnummer"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                    />
+                    <div className="contact_field">
+                        <label className="contact_label">Telefonnummer</label>
+                        <input
+                            className="contact_input"
+                            type="tel"
+                            placeholder="Ihre Telefonnummer"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
 
-                    <textarea
-                        className="contact_textarea"
-                        placeholder="Zusatzwünsche oder kurze Beschreibung"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                    />
+                    <div className="contact_field">
+                        <label className="contact_label">Zusatzwünsche oder kurze Beschreibung</label>
+                        <textarea
+                            className="contact_textarea"
+                            placeholder="Geben Sie hier weitere Informationen an"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                        />
+                    </div>
                 </div>
             </form>
         </>

@@ -12,10 +12,11 @@ function WebsiteQuestions({ goals, setGoals }: WebsiteQuestionProps) {
 
     return (
         <>
+            <div className="question">
+                <h2>Was soll Ihre Website für Sie leisten?</h2>
+            </div>
             <form className="choice_form">
-                <div className="question">
-                    <h2>Was soll Ihre Website für Sie leisten?</h2>
-                </div>
+
 
                 <WebsiteQuestion
                     goals={goals}

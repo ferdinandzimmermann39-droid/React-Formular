@@ -28,23 +28,26 @@ function WebsitePages({
     };
 
     return (
-        <form className="choice_form">
+        <>
             <div className="question">
                 <h2>Welche Bereiche soll Ihre Website enthalten?</h2>
             </div>
+            <form className="choice_form">
 
-            {options.map((option) => (
-                <label key={option}>
-                    <input
-                        className="choice"
-                        type="checkbox"
-                        checked={websitePages.includes(option)}
-                        onChange={() => togglePage(option)}
-                    />
-                    {option}
-                </label>
-            ))}
-        </form>
+
+                {options.map((option) => (
+                    <label key={option}>
+                        <input
+                            className="choice"
+                            type="checkbox"
+                            checked={websitePages.includes(option)}
+                            onChange={() => togglePage(option)}
+                        />
+                        <span>{option}</span>
+                    </label>
+                ))}
+            </form>
+        </>
     );
 }
 
