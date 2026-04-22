@@ -95,7 +95,7 @@ function WebsiteContact({
                         <label className="contact_label">Zusatzwünsche oder kurze Beschreibung</label>
                         <textarea
                             className="contact_textarea"
-                            placeholder="Geben Sie hier weitere Informationen an"
+                            placeholder="Geben Sie hier weitere Informationen an (Optional)"
                             value={message}
                             onChange={(e) => {
                                 setMessage(e.target.value);
