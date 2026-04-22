@@ -29,6 +29,42 @@ function Steps() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [message, setMessage] = useState("");
+    const [contactError, setContactError] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+
+
+
+    async function sendWebsiteRequest() {
+        const response = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                access_key: "3b03a035-b7b6-42ed-8335-4e1578ebc2bf",
+                subject: `Neue Website-Anfrage von ${name}`,
+                from_name: "Website Formular",
+
+                name,
+                company,
+                email,
+                phone,
+                message,
+
+                goals: goals.join(", "),
+                existingWebsite,
+                websitePages: websitePages.join(", "),
+                websiteAssets,
+                websiteBudget,
+                websiteTimeframe,
+            }),
+        });
+
+        return await response.json();
+    }
+
 
     const websiteSteps = [
         <WebsiteQuestions
@@ -62,7 +98,6 @@ function Steps() {
             setWebsiteTimeframe={setWebsiteTimeframe}
         />,
         <WebsiteContact
-            key="website-contact"
             name={name}
             setName={setName}
             company={company}
@@ -73,6 +108,8 @@ function Steps() {
             setPhone={setPhone}
             message={message}
             setMessage={setMessage}
+            contactError={contactError}
+            setContactError={setContactError}
         />
     ];
 
@@ -134,35 +171,57 @@ function Steps() {
                             type="button"
                             className="step_button"
                             onClick={() => {
+                                const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                                const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
+
                                 if (websiteStepIndex === 0 && goals.length === 0) {
                                     return;
                                 }
+
                                 if (websiteStepIndex === 1 && existingWebsite === "") {
                                     return;
                                 }
+
                                 if (websiteStepIndex === 2 && websitePages.length === 0) {
                                     return;
                                 }
+
                                 if (websiteStepIndex === 3 && websiteAssets === "") {
                                     return;
                                 }
+
                                 if (websiteStepIndex === 4 && websiteBudget === "") {
                                     return;
                                 }
+
                                 if (websiteStepIndex === 5 && websiteTimeframe === "") {
                                     return;
                                 }
-                                if (
-                                    websiteStepIndex === 6 &&
-                                    (
+
+                                if (websiteStepIndex === 6) {
+                                    if (
                                         name.trim() === "" ||
                                         company.trim() === "" ||
                                         email.trim() === "" ||
                                         phone.trim() === ""
-                                    )
-                                ) {
-                                    return;
+                                    ) {
+                                        setContactError("Bitte füllen Sie alle Pflichtfelder aus.");
+                                        return;
+                                    }
+
+                                    if (!emailIsValid) {
+                                        setContactError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+                                        return;
+                                    }
+
+                                    if (!phoneIsValid) {
+                                        setContactError("Bitte geben Sie eine gültige Telefonnummer ein.");
+                                        return;
+                                    }
+
+                                    setContactError("");
                                 }
+
                                 if (isLastStep) {
                                     console.log({
                                         goals,
@@ -215,6 +274,7 @@ function Steps() {
                         />
                     </div>
                     <div className="q_options">
+                        {submitError && <p className="contact_error">{submitError}</p>}
                         <button
                             type="button"
                             className="step_button"
@@ -225,20 +285,42 @@ function Steps() {
                         <button
                             type="button"
                             className="step_button"
-                            onClick={() => console.log(goals,
-                                existingWebsite,
-                                websitePages,
-                                websiteAssets,
-                                websiteBudget,
-                                websiteTimeframe,
-                                name,
-                                company,
-                                email,
-                                phone,
-                                message
-                            )}
+                            disabled={isSubmitting}
+                            onClick={async () => {
+                                try {
+                                    setIsSubmitting(true);
+                                    setSubmitError("");
+
+                                    const result = await sendWebsiteRequest();
+
+                                    if (result.success) {
+                                        setService("start");
+                                        setWebsiteStepIndex(0);
+
+                                        setGoals([]);
+                                        setExistingWebsite("");
+                                        setWebsitePages([]);
+                                        setWebsiteAssets("");
+                                        setWebsiteBudget("");
+                                        setWebsiteTimeframe("");
+                                        setName("");
+                                        setCompany("");
+                                        setEmail("");
+                                        setPhone("");
+                                        setMessage("");
+                                        setContactError("");
+                                    } else {
+                                        setSubmitError("Die Anfrage konnte nicht gesendet werden.");
+                                    }
+                                } catch (error) {
+                                    console.error(error);
+                                    setSubmitError("Beim Senden ist ein Fehler aufgetreten.");
+                                } finally {
+                                    setIsSubmitting(false);
+                                }
+                            }}
                         >
-                            <div><h5>Formular absenden</h5></div>
+                            <div><h5>{isSubmitting ? "Wird gesendet..." : "Anfrage senden"}</h5></div>
                         </button>
                     </div>
                 </div>

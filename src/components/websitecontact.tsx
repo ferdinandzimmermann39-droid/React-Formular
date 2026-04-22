@@ -9,6 +9,8 @@ type WebsiteContactProps = {
     setPhone: React.Dispatch<React.SetStateAction<string>>;
     message: string;
     setMessage: React.Dispatch<React.SetStateAction<string>>;
+    contactError: string;
+    setContactError: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function WebsiteContact({
@@ -22,6 +24,8 @@ function WebsiteContact({
     setPhone,
     message,
     setMessage,
+    contactError,
+    setContactError,
 }: WebsiteContactProps) {
     return (
         <>
@@ -38,7 +42,10 @@ function WebsiteContact({
                             type="text"
                             placeholder="Ihr Name"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => {
+                                setName(e.target.value);
+                                setContactError("");
+                            }}
                         />
                     </div>
 
@@ -49,7 +56,10 @@ function WebsiteContact({
                             type="text"
                             placeholder="Unternehmen oder Projektname"
                             value={company}
-                            onChange={(e) => setCompany(e.target.value)}
+                            onChange={(e) => {
+                                setCompany(e.target.value);
+                                setContactError("");
+                            }}
                         />
                     </div>
 
@@ -60,7 +70,10 @@ function WebsiteContact({
                             type="email"
                             placeholder="ihre@email.de"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setContactError("");
+                            }}
                         />
                     </div>
 
@@ -71,7 +84,10 @@ function WebsiteContact({
                             type="tel"
                             placeholder="Ihre Telefonnummer"
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            onChange={(e) => {
+                                setPhone(e.target.value);
+                                setContactError("");
+                            }}
                         />
                     </div>
 
@@ -81,13 +97,21 @@ function WebsiteContact({
                             className="contact_textarea"
                             placeholder="Geben Sie hier weitere Informationen an"
                             value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                            onChange={(e) => {
+                                setMessage(e.target.value);
+                                setContactError("");
+                            }}
                         />
                     </div>
+
+                    {contactError && (
+                        <p className="contact_error">{contactError}</p>
+                    )}
                 </div>
             </form>
         </>
     );
 }
+
 
 export default WebsiteContact;
