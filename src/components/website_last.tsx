@@ -31,7 +31,7 @@ function WebsiteLast({
                 <p className="website_last_overline">Ihre Anfrage</p>
                 <h1 className="website_last_title">Zusammenfassung</h1>
                 <p className="website_last_subtitle">
-                    Prüfen Sie Ihre Angaben, bevor die Anfrage vorbereitet wird.
+                    Prüfen Sie Ihre Angaben, bevor Sie ihre unverbindliche Anfrage absenden.
                 </p>
             </div>
 
@@ -100,7 +100,13 @@ function WebsiteLast({
 
                 <div className="website_last_box website_last_box_full">
                     <h2>Zusätzliche Nachricht</h2>
-                    <p className="website_last_message">
+                    <p
+                        className={
+                            message.trim() !== ""
+                                ? "website_last_message website_last_message_filled"
+                                : "website_last_message website_last_message_empty"
+                        }
+                    >
                         {message.trim() !== ""
                             ? message
                             : "Keine zusätzliche Nachricht angegeben."}

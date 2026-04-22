@@ -7,6 +7,7 @@ import WebsiteAssets from "./websiteassets.tsx";
 import WebsiteTimeframe from "./websitetimeframe.tsx";
 import WebsiteContact from "./websitecontact.tsx";
 import WebsiteLast from "./website_last.tsx";
+import ProgressBar from "./progressbar.tsx";
 
 type Service = "start" | "logo" | "website" | "logo_website" | "website_last";
 
@@ -110,6 +111,10 @@ function Steps() {
 
                     {websiteSteps[websiteStepIndex]}
 
+                    <ProgressBar
+                        currentStep={websiteStepIndex}
+                        totalSteps={websiteSteps.length}
+                    />
                     <div className="q_options">
                         <button
                             type="button"
@@ -181,6 +186,7 @@ function Steps() {
                             <div><h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5></div>
                         </button>
                     </div>
+
                 </div>
             </section>
         );
@@ -202,7 +208,12 @@ function Steps() {
                         phone={phone}
                         message={message}
                     />
-
+                    <div className="progressbar_outer">
+                        <ProgressBar
+                            currentStep={websiteStepIndex}
+                            totalSteps={websiteSteps.length}
+                        />
+                    </div>
                     <div className="q_options">
                         <button
                             type="button"
@@ -210,6 +221,24 @@ function Steps() {
                             onClick={() => setService("website")}
                         >
                             <div><h5>Zurück</h5></div>
+                        </button>
+                        <button
+                            type="button"
+                            className="step_button"
+                            onClick={() => console.log(goals,
+                                existingWebsite,
+                                websitePages,
+                                websiteAssets,
+                                websiteBudget,
+                                websiteTimeframe,
+                                name,
+                                company,
+                                email,
+                                phone,
+                                message
+                            )}
+                        >
+                            <div><h5>Formular absenden</h5></div>
                         </button>
                     </div>
                 </div>
