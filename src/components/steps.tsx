@@ -8,6 +8,7 @@ import WebsiteTimeframe from "./websitetimeframe.tsx";
 import WebsiteContact from "./websitecontact.tsx";
 import WebsiteLast from "./website_last.tsx";
 import ProgressBar from "./progressbar.tsx";
+import Swal from "sweetalert2";
 
 type Service = "start" | "logo" | "website" | "logo_website" | "website_last";
 
@@ -294,9 +295,17 @@ function Steps() {
                                     const result = await sendWebsiteRequest();
 
                                     if (result.success) {
+                                        await Swal.fire({
+                                            title: "Nachricht gesendet!",
+                                            text: "Vielen Dank für Ihre Anfrage.",
+                                            icon: "success",
+                                            confirmButtonText: "Okay",
+                                            background: "#f5f5f5",
+                                            color: "#222222",
+                                            confirmButtonColor: "#2f810e",
+                                        });
                                         setService("start");
                                         setWebsiteStepIndex(0);
-
                                         setGoals([]);
                                         setExistingWebsite("");
                                         setWebsitePages([]);
@@ -309,6 +318,7 @@ function Steps() {
                                         setPhone("");
                                         setMessage("");
                                         setContactError("");
+
                                     } else {
                                         setSubmitError("Die Anfrage konnte nicht gesendet werden.");
                                     }
