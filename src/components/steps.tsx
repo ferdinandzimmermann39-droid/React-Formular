@@ -9,8 +9,10 @@ import WebsiteContact from "./websitecontact.tsx";
 import WebsiteLast from "./website_last.tsx";
 import ProgressBar from "./progressbar.tsx";
 import Swal from "sweetalert2";
+import LogoFirst from "./logofirst.tsx";
+import LogoStyle from "./logostyle.tsx";
 
-type Service = "start" | "logo" | "website" | "logo_website" | "website_last";
+type Service = "start" | "logo" | "logo_last" | "website" | "website_last" | "logo_website";
 
 function Steps() {
     const [service, setService] = useState<Service>("start");
@@ -33,27 +35,24 @@ function Steps() {
     const [contactError, setContactError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
-
+    const [logoOptions, setLogoOptions] = useState("");
+    const [logoStepIndex, setLogoStepIndex] = useState(0);
+    const [logoStyle, setLogoStyle] = useState<string[]>([]);
 
 
     async function sendWebsiteRequest() {
-        const response = await fetch("https://api.web3forms.com/submit", {
+        const response = await fetch("http://localhost/formular_2/send-mail.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",
             },
             body: JSON.stringify({
-                access_key: "3b03a035-b7b6-42ed-8335-4e1578ebc2bf",
-                subject: `Neue Website-Anfrage von ${name}`,
-                from_name: "Website Formular",
-
                 name,
                 company,
                 email,
                 phone,
                 message,
-
                 goals: goals.join(", "),
                 existingWebsite,
                 websitePages: websitePages.join(", "),
@@ -65,7 +64,6 @@ function Steps() {
 
         return await response.json();
     }
-
 
     const websiteSteps = [
         <WebsiteQuestions
@@ -114,28 +112,66 @@ function Steps() {
         />
     ];
 
+    const logoSteps = [
+        <LogoFirst
+            key="logofirst"
+            logoOptions={logoOptions}
+            setLogoOptions={setLogoOptions}
+        />,
+        <LogoStyle
+            key="logostyle"
+            logoStyle={logoStyle}
+            setLogoStyle={setLogoStyle}
+        />
+    ]
+
+
     if (service === "logo") {
+        const isFirstStep = logoStepIndex === 0;
+        const isLastStep = logoStepIndex === logoSteps.length - 1;
         return (
             <section className="questionform">
                 <div className="questformcontent">
                     <div className="question">
                         <h1>Logo</h1>
                     </div>
-
+                    {logoSteps[logoStepIndex]}
                     <div className="q_options">
                         <button
                             type="button"
                             className="step_button"
-                            onClick={() => setService("start")}
+                            onClick={() => {
+                                if (isFirstStep) {
+                                    setService("start");
+                                } else {
+                                    setLogoStepIndex((prev) => prev - 1);
+                                }
+                            }}
                         >
                             <div><h5>Zurück</h5></div>
                         </button>
+                        <button className="step_button"
+                            type="button"
+                            onClick={() => {
+                                if (isLastStep) {
+                                    setService("logo_last");
+                                } else {
+                                    setLogoStepIndex((prev) => prev + 1);
+                                }
+                            }
+
+                            }
+                        ><h5>Weiter</h5></button>
                     </div>
                 </div>
-            </section>
+            </section >
         );
     }
-
+    if (service === "logo_last") {
+        return (
+            <h1>HIER GEHTS NICHT WEITER</h1>
+        );
+    }
     if (service === "website") {
         const isFirstStep = websiteStepIndex === 0;
         const isLastStep = websiteStepIndex === websiteSteps.length - 1;
@@ -158,6 +194,7 @@ function Steps() {
                             type="button"
                             className="step_button"
                             onClick={() => {
+
                                 if (isFirstStep) {
                                     setService("start");
                                 } else {
@@ -248,7 +285,7 @@ function Steps() {
                     </div>
 
                 </div>
-            </section>
+            </section >
         );
     }
     if (service === "website_last") {
@@ -304,8 +341,10 @@ function Steps() {
                                             color: "#222222",
                                             confirmButtonColor: "#2f810e",
                                         });
+
                                         setService("start");
                                         setWebsiteStepIndex(0);
+
                                         setGoals([]);
                                         setExistingWebsite("");
                                         setWebsitePages([]);
@@ -318,9 +357,8 @@ function Steps() {
                                         setPhone("");
                                         setMessage("");
                                         setContactError("");
-
                                     } else {
-                                        setSubmitError("Die Anfrage konnte nicht gesendet werden.");
+                                        setSubmitError(result.message || "Die Anfrage konnte nicht gesendet werden.");
                                     }
                                 } catch (error) {
                                     console.error(error);

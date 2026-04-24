@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# PHP / Secrets
+config.php
+.env
+
+# Composer
+/vendor/
+composer.lock

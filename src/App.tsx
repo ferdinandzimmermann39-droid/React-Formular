@@ -1,8 +1,8 @@
-import StartQuestions from './components/steps'
+import Steps from './components/steps'
 
 function App() {
   return (
-    <StartQuestions></StartQuestions>
+    <Steps />
   )
 }
 
