@@ -41,6 +41,22 @@ function Steps() {
 
 
     async function sendWebsiteRequest() {
+        const ka = JSON.stringify({
+            name,
+            company,
+            email,
+            phone,
+            message,
+            goals: goals.join(", "),
+            existingWebsite,
+            websitePages: websitePages.join(", "),
+            websiteAssets,
+            websiteBudget,
+            websiteTimeframe,
+        });
+
+        console.log(typeof (ka));
+
         const response = await fetch("http://localhost/formular_2/send-mail.php", {
             method: "POST",
             headers: {
@@ -153,6 +169,15 @@ function Steps() {
                         <button className="step_button"
                             type="button"
                             onClick={() => {
+                                if (logoStepIndex === 0 && logoOptions === "") {
+                                    return;
+                                }
+                                if (logoStepIndex === 1 && logoStyle.length === 0) {
+                                    return;
+                                }
+
+
+
                                 if (isLastStep) {
                                     setService("logo_last");
                                 } else {
@@ -397,61 +422,63 @@ function Steps() {
         );
     }
 
-    return (
-        <section className="questionform">
-            <div className="questformcontent">
-                <div className="question">
-                    <h1>Was benötigen Sie?</h1>
+    if (service === "start") {
+        return (
+            <section className="questionform">
+                <div className="questformcontent">
+                    <div className="question">
+                        <h1>Was benötigen Sie?</h1>
+                    </div>
+
+                    <div className="q_options">
+                        <button
+                            type="button"
+                            className="q_option_link"
+                            onClick={() => setService("logo")}
+                        >
+                            <div className="q_option">
+                                <h3>Logo</h3>
+                                <div className="logodiv">
+                                    <img src="/shield.svg" alt="Logo" />
+                                </div>
+                            </div>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="q_option_link"
+                            onClick={() => {
+                                setWebsiteStepIndex(0);
+                                setService("website");
+                            }}
+                        >
+                            <div className="q_option">
+                                <h3>Webseite</h3>
+                                <div className="logodiv">
+                                    <img src="/world.svg" alt="Website Logo" />
+                                </div>
+                            </div>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="q_option_link"
+                            onClick={() => setService("logo_website")}
+                        >
+                            <div className="q_option">
+                                <h3>Logo & Webseite</h3>
+                                <div className="logodiv">
+                                    <img src="/shield.svg" alt="Logo" />
+                                    <p>&</p>
+                                    <img src="/world.svg" alt="Website Logo" />
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                 </div>
-
-                <div className="q_options">
-                    <button
-                        type="button"
-                        className="q_option_link"
-                        onClick={() => setService("logo")}
-                    >
-                        <div className="q_option">
-                            <h3>Logo</h3>
-                            <div className="logodiv">
-                                <img src="/shield.svg" alt="Logo" />
-                            </div>
-                        </div>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="q_option_link"
-                        onClick={() => {
-                            setWebsiteStepIndex(0);
-                            setService("website");
-                        }}
-                    >
-                        <div className="q_option">
-                            <h3>Webseite</h3>
-                            <div className="logodiv">
-                                <img src="/world.svg" alt="Website Logo" />
-                            </div>
-                        </div>
-                    </button>
-
-                    <button
-                        type="button"
-                        className="q_option_link"
-                        onClick={() => setService("logo_website")}
-                    >
-                        <div className="q_option">
-                            <h3>Logo & Webseite</h3>
-                            <div className="logodiv">
-                                <img src="/shield.svg" alt="Logo" />
-                                <p>&</p>
-                                <img src="/world.svg" alt="Website Logo" />
-                            </div>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </section>
-    );
+            </section>
+        );
+    }
 }
 
 export default Steps;

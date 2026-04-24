@@ -26,11 +26,9 @@ function LogoStyle({
     return (
         <>
             <div className="question">
-                <h2>Welche Bereiche soll Ihre Website enthalten?</h2>
+                <h2>Welche Eigenschaften soll ihr Logo aufweisen?</h2>
             </div>
             <form className="choice_form">
-
-
                 {options.map((option) => (
                     <label key={option}>
                         <input
