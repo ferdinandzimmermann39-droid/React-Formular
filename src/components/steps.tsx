@@ -11,22 +11,22 @@ import ProgressBar from "./progressbar.tsx";
 import Swal from "sweetalert2";
 import LogoFirst from "./logofirst.tsx";
 import LogoStyle from "./logostyle.tsx";
+import LogoBudget from "./logobudget.tsx";
+import LogoBranche from "./logobranche.tsx";
+import LogoContact from "./logocontact.tsx";
+import LogoLast from "./logo_last.tsx";
 
 type Service = "start" | "logo" | "logo_last" | "website" | "website_last" | "logo_website";
 
 function Steps() {
     const [service, setService] = useState<Service>("start");
     const [websiteStepIndex, setWebsiteStepIndex] = useState(0);
-
     const [goals, setGoals] = useState<string[]>([]);
-
     const [websiteBudget, setWebsiteBudget] = useState("");
-
     const [existingWebsite, setExistingWebsite] = useState("");
     const [websitePages, setWebsitePages] = useState<string[]>([]);
     const [websiteAssets, setWebsiteAssets] = useState("");
     const [websiteTimeframe, setWebsiteTimeframe] = useState("");
-
     const [name, setName] = useState("");
     const [company, setCompany] = useState("");
     const [email, setEmail] = useState("");
@@ -38,26 +38,14 @@ function Steps() {
     const [logoOptions, setLogoOptions] = useState("");
     const [logoStepIndex, setLogoStepIndex] = useState(0);
     const [logoStyle, setLogoStyle] = useState<string[]>([]);
+    const [logoBudget, setLogoBudget] = useState("");
+    const [logoBranche, setLogoBranche] = useState("");
+    const [logoBrancheDesc, setLogoBrancheDesc] = useState("");
 
 
     async function sendWebsiteRequest() {
-        const ka = JSON.stringify({
-            name,
-            company,
-            email,
-            phone,
-            message,
-            goals: goals.join(", "),
-            existingWebsite,
-            websitePages: websitePages.join(", "),
-            websiteAssets,
-            websiteBudget,
-            websiteTimeframe,
-        });
 
-        console.log(typeof (ka));
-
-        const response = await fetch("http://localhost/formular_2/send-mail.php", {
+        const response = await fetch("http://localhost/formular_2/send-website-mail.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -77,8 +65,29 @@ function Steps() {
                 websiteTimeframe,
             }),
         });
-
         return await response.json();
+
+    }
+
+    async function sendLogoRequest() {
+        const response = await fetch("http://localhost/formular_2/send-logo-mail.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                name,
+                logoBranche,
+                email,
+                phone,
+                logoBrancheDesc,
+                logoOptions,
+                logoStyle: logoStyle.join(", "),
+                logoBudget,
+            }),
+        });
+        return await response.json()
     }
 
     const websiteSteps = [
@@ -138,346 +147,463 @@ function Steps() {
             key="logostyle"
             logoStyle={logoStyle}
             setLogoStyle={setLogoStyle}
+        />,
+        <LogoBudget
+            key="logobudget"
+            logoBudget={logoBudget}
+            setLogoBudget={setLogoBudget}
+        />,
+        <LogoBranche
+            key="logobranche"
+            logoBranche={logoBranche}
+            setLogoBranche={setLogoBranche}
+            logoBrancheDesc={logoBrancheDesc}
+            setLogoBrancheDesc={setLogoBrancheDesc}
+        />,
+        <LogoContact
+            key="logocontact"
+            name={name}
+            setName={setName}
+            phone={phone}
+            setPhone={setPhone}
+            email={email}
+            setEmail={setEmail}
         />
     ]
 
 
-    if (service === "logo") {
-        const isFirstStep = logoStepIndex === 0;
-        const isLastStep = logoStepIndex === logoSteps.length - 1;
-        return (
-            <section className="questionform">
-                <div className="questformcontent">
-                    <div className="question">
-                        <h1>Logo</h1>
-                    </div>
-                    {logoSteps[logoStepIndex]}
-                    <div className="q_options">
-                        <button
-                            type="button"
-                            className="step_button"
-                            onClick={() => {
-                                if (isFirstStep) {
-                                    setService("start");
-                                } else {
-                                    setLogoStepIndex((prev) => prev - 1);
-                                }
-                            }}
-                        >
-                            <div><h5>Zurück</h5></div>
-                        </button>
-                        <button className="step_button"
-                            type="button"
-                            onClick={() => {
-                                if (logoStepIndex === 0 && logoOptions === "") {
-                                    return;
-                                }
-                                if (logoStepIndex === 1 && logoStyle.length === 0) {
-                                    return;
-                                }
-
-
-
-                                if (isLastStep) {
-                                    setService("logo_last");
-                                } else {
-                                    setLogoStepIndex((prev) => prev + 1);
-                                }
-                            }
-
-                            }
-                        ><h5>Weiter</h5></button>
-                    </div>
-                </div>
-            </section >
-        );
-    }
-    if (service === "logo_last") {
-        return (
-            <h1>HIER GEHTS NICHT WEITER</h1>
-        );
-    }
-    if (service === "website") {
-        const isFirstStep = websiteStepIndex === 0;
-        const isLastStep = websiteStepIndex === websiteSteps.length - 1;
-
-        return (
-            <section className="questionform">
-                <div className="questformcontent">
-                    <div className="question">
-                        <h1>Webseite</h1>
-                    </div>
-
-                    {websiteSteps[websiteStepIndex]}
-
-                    <ProgressBar
-                        currentStep={websiteStepIndex}
-                        totalSteps={websiteSteps.length}
-                    />
-                    <div className="q_options">
-                        <button
-                            type="button"
-                            className="step_button"
-                            onClick={() => {
-
-                                if (isFirstStep) {
-                                    setService("start");
-                                } else {
-                                    setWebsiteStepIndex((prev) => prev - 1);
-                                }
-                            }}
-                        >
-                            <div><h5>Zurück</h5></div>
-                        </button>
-
-                        <button
-                            type="button"
-                            className="step_button"
-                            onClick={() => {
-                                const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-                                const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
-
-                                if (websiteStepIndex === 0 && goals.length === 0) {
-                                    return;
-                                }
-
-                                if (websiteStepIndex === 1 && existingWebsite === "") {
-                                    return;
-                                }
-
-                                if (websiteStepIndex === 2 && websitePages.length === 0) {
-                                    return;
-                                }
-
-                                if (websiteStepIndex === 3 && websiteAssets === "") {
-                                    return;
-                                }
-
-                                if (websiteStepIndex === 4 && websiteBudget === "") {
-                                    return;
-                                }
-
-                                if (websiteStepIndex === 5 && websiteTimeframe === "") {
-                                    return;
-                                }
-
-                                if (websiteStepIndex === 6) {
-                                    if (
-                                        name.trim() === "" ||
-                                        company.trim() === "" ||
-                                        email.trim() === "" ||
-                                        phone.trim() === ""
-                                    ) {
-                                        setContactError("Bitte füllen Sie alle Pflichtfelder aus.");
+    switch (service) {
+        case "logo": {
+            const isFirstStep = logoStepIndex === 0;
+            const isLastStep = logoStepIndex === logoSteps.length - 1;
+            return (
+                <section className="questionform">
+                    <div className="questformcontent">
+                        <div className="question">
+                            <h1>Logo</h1>
+                        </div>
+                        {logoSteps[logoStepIndex]}
+                        <div className="progressbar_outer">
+                            <ProgressBar
+                                currentStep={logoStepIndex}
+                                totalSteps={logoSteps.length}
+                            />
+                        </div>
+                        <div className="q_options">
+                            <button
+                                type="button"
+                                className="step_button"
+                                onClick={() => {
+                                    if (isFirstStep) {
+                                        setService("start");
+                                    } else {
+                                        setLogoStepIndex((prev) => prev - 1);
+                                    }
+                                }}
+                            >
+                                <div><h5>Zurück</h5></div>
+                            </button>
+                            <button className="step_button"
+                                type="button"
+                                onClick={() => {
+                                    if (logoStepIndex === 0 && logoOptions === "") {
                                         return;
                                     }
-
-                                    if (!emailIsValid) {
-                                        setContactError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+                                    if (logoStepIndex === 1 && logoStyle.length === 0) {
                                         return;
                                     }
-
-                                    if (!phoneIsValid) {
-                                        setContactError("Bitte geben Sie eine gültige Telefonnummer ein.");
+                                    if (logoStepIndex === 2 && logoBudget === "") {
                                         return;
                                     }
-
-                                    setContactError("");
+                                    if (logoStepIndex === 3 && (logoBranche === "" || logoBrancheDesc === "")) {
+                                        return;
+                                    }
+                                    if (logoStepIndex === 4 && (name === "" || email === "" || phone === "")) {
+                                        return;
+                                    }
+                                    if (isLastStep) {
+                                        setService("logo_last");
+                                    } else {
+                                        setLogoStepIndex((prev) => prev + 1);
+                                    }
                                 }
-
-                                if (isLastStep) {
-                                    console.log({
-                                        goals,
-                                        existingWebsite,
-                                        websitePages,
-                                        websiteAssets,
-                                        websiteBudget,
-                                        websiteTimeframe,
-                                        name,
-                                        company,
-                                        email,
-                                        phone,
-                                        message,
-                                    });
-                                    setService("website_last");
-                                } else {
-                                    setWebsiteStepIndex((prev) => prev + 1);
                                 }
-                            }}
-                        >
-                            <div><h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5></div>
-                        </button>
+                            ><h5>Weiter</h5></button>
+                        </div>
                     </div>
+                </section >
+            );
+        }
 
-                </div>
-            </section >
-        );
-    }
-    if (service === "website_last") {
-        return (
-            <section className="questionform">
-                <div className="questformcontent">
-                    <WebsiteLast
-                        goals={goals}
-                        existingWebsite={existingWebsite}
-                        websitePages={websitePages}
-                        websiteAssets={websiteAssets}
-                        websiteBudget={websiteBudget}
-                        websiteTimeframe={websiteTimeframe}
-                        name={name}
-                        company={company}
-                        email={email}
-                        phone={phone}
-                        message={message}
-                    />
-                    <div className="progressbar_outer">
+        case "logo_last": {
+            return (
+                <>
+                    <section className="questionform">
+                        <div className="questformcontent">
+                            <LogoLast
+                                logoOptions={logoOptions}
+                                logoStyle={logoStyle}
+                                logoBudget={logoBudget}
+                                logoBranche={logoBranche}
+                                logoBrancheDesc={logoBrancheDesc}
+                                name={name}
+                                email={email}
+                                phone={phone}
+                            />
+                            <div className="progressbar_outer">
+                                <ProgressBar
+                                    currentStep={logoStepIndex}
+                                    totalSteps={logoSteps.length}
+                                />
+                            </div>
+                            <div className="q_options">
+                                {submitError && <p className="contact_error">{submitError}</p>}
+                                <button
+                                    type="button"
+                                    className="step_button"
+                                    onClick={() => setService("logo")}
+                                >
+                                    <div><h5>Zurück</h5></div>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="step_button"
+                                    disabled={isSubmitting}
+                                    onClick={async () => {
+                                        try {
+                                            setIsSubmitting(true);
+                                            setSubmitError("");
+
+                                            const result = await sendLogoRequest();
+
+                                            if (result.success) {
+                                                await Swal.fire({
+                                                    title: "Nachricht gesendet!",
+                                                    text: "Vielen Dank für Ihre Anfrage.",
+                                                    icon: "success",
+                                                    confirmButtonText: "Okay",
+                                                    background: "#f5f5f5",
+                                                    color: "#222222",
+                                                    confirmButtonColor: "#2f810e",
+                                                });
+
+                                                setService("start");
+                                                setLogoStepIndex(0);
+
+                                                setName("");
+                                                setEmail("");
+                                                setPhone("");
+                                                setLogoBranche("");
+                                                setLogoBrancheDesc("");
+                                                setLogoOptions("");
+                                                setLogoStyle([]);
+                                                setLogoBudget("");
+                                                setContactError("");
+                                            } else {
+                                                setSubmitError(result.message || "Die Anfrage konnte nicht gesendet werden.");
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                            setSubmitError("Beim Senden ist ein Fehler aufgetreten.");
+                                        } finally {
+                                            setIsSubmitting(false);
+                                        }
+                                    }}
+                                >
+                                    <div><h5>{isSubmitting ? "Wird gesendet..." : "Anfrage senden"}</h5></div>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            );
+        }
+
+        case "website": {
+            let isFirstStep = websiteStepIndex === 0;
+            let isLastStep = websiteStepIndex === websiteSteps.length - 1;
+
+            return (
+                <section className="questionform">
+                    <div className="questformcontent">
+                        <div className="question">
+                            <h1>Webseite</h1>
+                        </div>
+
+                        {websiteSteps[websiteStepIndex]}
+
                         <ProgressBar
                             currentStep={websiteStepIndex}
                             totalSteps={websiteSteps.length}
                         />
-                    </div>
-                    <div className="q_options">
-                        {submitError && <p className="contact_error">{submitError}</p>}
-                        <button
-                            type="button"
-                            className="step_button"
-                            onClick={() => setService("website")}
-                        >
-                            <div><h5>Zurück</h5></div>
-                        </button>
-                        <button
-                            type="button"
-                            className="step_button"
-                            disabled={isSubmitting}
-                            onClick={async () => {
-                                try {
-                                    setIsSubmitting(true);
-                                    setSubmitError("");
+                        <div className="q_options">
+                            <button
+                                type="button"
+                                className="step_button"
+                                onClick={() => {
 
-                                    const result = await sendWebsiteRequest();
-
-                                    if (result.success) {
-                                        await Swal.fire({
-                                            title: "Nachricht gesendet!",
-                                            text: "Vielen Dank für Ihre Anfrage.",
-                                            icon: "success",
-                                            confirmButtonText: "Okay",
-                                            background: "#f5f5f5",
-                                            color: "#222222",
-                                            confirmButtonColor: "#2f810e",
-                                        });
-
+                                    if (isFirstStep) {
                                         setService("start");
-                                        setWebsiteStepIndex(0);
-
-                                        setGoals([]);
-                                        setExistingWebsite("");
-                                        setWebsitePages([]);
-                                        setWebsiteAssets("");
-                                        setWebsiteBudget("");
-                                        setWebsiteTimeframe("");
-                                        setName("");
-                                        setCompany("");
-                                        setEmail("");
-                                        setPhone("");
-                                        setMessage("");
-                                        setContactError("");
                                     } else {
-                                        setSubmitError(result.message || "Die Anfrage konnte nicht gesendet werden.");
+                                        setWebsiteStepIndex((prev) => prev - 1);
                                     }
-                                } catch (error) {
-                                    console.error(error);
-                                    setSubmitError("Beim Senden ist ein Fehler aufgetreten.");
-                                } finally {
-                                    setIsSubmitting(false);
-                                }
-                            }}
-                        >
-                            <div><h5>{isSubmitting ? "Wird gesendet..." : "Anfrage senden"}</h5></div>
-                        </button>
-                    </div>
-                </div>
-            </section>
-        );
-    }
-    if (service === "logo_website") {
-        return (
-            <section className="questionform">
-                <div className="questformcontent">
-                    <div className="question">
-                        <h1>Logo & Webseite</h1>
-                    </div>
+                                }}
+                            >
+                                <div><h5>Zurück</h5></div>
+                            </button>
 
-                    <div className="q_options">
-                        <button
-                            type="button"
-                            className="step_button"
-                            onClick={() => setService("start")}
-                        >
-                            <div><h5>Zurück</h5></div>
-                        </button>
-                    </div>
-                </div>
-            </section>
-        );
-    }
+                            <button
+                                type="button"
+                                className="step_button"
+                                onClick={() => {
+                                    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                                    const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
 
-    if (service === "start") {
-        return (
-            <section className="questionform">
-                <div className="questformcontent">
-                    <div className="question">
-                        <h1>Was benötigen Sie?</h1>
-                    </div>
+                                    if (websiteStepIndex === 0 && goals.length === 0) {
+                                        return;
+                                    }
 
-                    <div className="q_options">
-                        <button
-                            type="button"
-                            className="q_option_link"
-                            onClick={() => setService("logo")}
-                        >
-                            <div className="q_option">
-                                <h3>Logo</h3>
-                                <div className="logodiv">
-                                    <img src="/shield.svg" alt="Logo" />
+                                    if (websiteStepIndex === 1 && existingWebsite === "") {
+                                        return;
+                                    }
+
+                                    if (websiteStepIndex === 2 && websitePages.length === 0) {
+                                        return;
+                                    }
+
+                                    if (websiteStepIndex === 3 && websiteAssets === "") {
+                                        return;
+                                    }
+
+                                    if (websiteStepIndex === 4 && websiteBudget === "") {
+                                        return;
+                                    }
+
+                                    if (websiteStepIndex === 5 && websiteTimeframe === "") {
+                                        return;
+                                    }
+
+                                    if (websiteStepIndex === 6) {
+                                        if (
+                                            name.trim() === "" ||
+                                            company.trim() === "" ||
+                                            email.trim() === "" ||
+                                            phone.trim() === ""
+                                        ) {
+                                            setContactError("Bitte füllen Sie alle Pflichtfelder aus.");
+                                            return;
+                                        }
+
+                                        if (!emailIsValid) {
+                                            setContactError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+                                            return;
+                                        }
+
+                                        if (!phoneIsValid) {
+                                            setContactError("Bitte geben Sie eine gültige Telefonnummer ein.");
+                                            return;
+                                        }
+
+                                        setContactError("");
+                                    }
+
+                                    if (isLastStep) {
+                                        console.log({
+                                            goals,
+                                            existingWebsite,
+                                            websitePages,
+                                            websiteAssets,
+                                            websiteBudget,
+                                            websiteTimeframe,
+                                            name,
+                                            company,
+                                            email,
+                                            phone,
+                                            message,
+                                        });
+                                        setService("website_last");
+                                    } else {
+                                        setWebsiteStepIndex((prev) => prev + 1);
+                                    }
+                                }}
+                            >
+                                <div><h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5></div>
+                            </button>
+                        </div>
+
+                    </div>
+                </section >
+            );
+        }
+
+        case "website_last": {
+            return (
+                <section className="questionform">
+                    <div className="questformcontent">
+                        <WebsiteLast
+                            goals={goals}
+                            existingWebsite={existingWebsite}
+                            websitePages={websitePages}
+                            websiteAssets={websiteAssets}
+                            websiteBudget={websiteBudget}
+                            websiteTimeframe={websiteTimeframe}
+                            name={name}
+                            company={company}
+                            email={email}
+                            phone={phone}
+                            message={message}
+                        />
+                        <div className="progressbar_outer">
+                            <ProgressBar
+                                currentStep={websiteStepIndex}
+                                totalSteps={websiteSteps.length}
+                            />
+                        </div>
+                        <div className="q_options">
+                            {submitError && <p className="contact_error">{submitError}</p>}
+                            <button
+                                type="button"
+                                className="step_button"
+                                onClick={() => setService("website")}
+                            >
+                                <div><h5>Zurück</h5></div>
+                            </button>
+                            <button
+                                type="button"
+                                className="step_button"
+                                disabled={isSubmitting}
+                                onClick={async () => {
+                                    try {
+                                        setIsSubmitting(true);
+                                        setSubmitError("");
+
+                                        const result = await sendWebsiteRequest();
+
+                                        if (result.success) {
+                                            await Swal.fire({
+                                                title: "Nachricht gesendet!",
+                                                text: "Vielen Dank für Ihre Anfrage.",
+                                                icon: "success",
+                                                confirmButtonText: "Okay",
+                                                background: "#f5f5f5",
+                                                color: "#222222",
+                                                confirmButtonColor: "#2f810e",
+                                            });
+
+                                            setService("start");
+                                            setWebsiteStepIndex(0);
+
+                                            setGoals([]);
+                                            setExistingWebsite("");
+                                            setWebsitePages([]);
+                                            setWebsiteAssets("");
+                                            setWebsiteBudget("");
+                                            setWebsiteTimeframe("");
+                                            setName("");
+                                            setCompany("");
+                                            setEmail("");
+                                            setPhone("");
+                                            setMessage("");
+                                            setContactError("");
+                                        } else {
+                                            setSubmitError(result.message || "Die Anfrage konnte nicht gesendet werden.");
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        setSubmitError("Beim Senden ist ein Fehler aufgetreten.");
+                                    } finally {
+                                        setIsSubmitting(false);
+                                    }
+                                }}
+                            >
+                                <div><h5>{isSubmitting ? "Wird gesendet..." : "Anfrage senden"}</h5></div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        case "logo_website": {
+            return (
+                <section className="questionform">
+                    <div className="questformcontent">
+                        <div className="question">
+                            <h1>Logo & Webseite</h1>
+                        </div>
+
+                        <div className="q_options">
+                            <button
+                                type="button"
+                                className="step_button"
+                                onClick={() => setService("start")}
+                            >
+                                <div><h5>Zurück</h5></div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        case "start":
+        default: {
+            return (
+                <section className="questionform">
+                    <div className="questformcontent">
+                        <div className="question">
+                            <h1>Was benötigen Sie?</h1>
+                        </div>
+
+                        <div className="q_options">
+                            <button
+                                type="button"
+                                className="q_option_link"
+                                onClick={() => setService("logo")}
+                            >
+                                <div className="q_option">
+                                    <h3>Logo</h3>
+                                    <div className="logodiv">
+                                        <img src="/shield.svg" alt="Logo" />
+                                    </div>
                                 </div>
-                            </div>
-                        </button>
+                            </button>
 
-                        <button
-                            type="button"
-                            className="q_option_link"
-                            onClick={() => {
-                                setWebsiteStepIndex(0);
-                                setService("website");
-                            }}
-                        >
-                            <div className="q_option">
-                                <h3>Webseite</h3>
-                                <div className="logodiv">
-                                    <img src="/world.svg" alt="Website Logo" />
+                            <button
+                                type="button"
+                                className="q_option_link"
+                                onClick={() => {
+                                    setWebsiteStepIndex(0);
+                                    setService("website");
+                                }}
+                            >
+                                <div className="q_option">
+                                    <h3>Webseite</h3>
+                                    <div className="logodiv">
+                                        <img src="/world.svg" alt="Website Logo" />
+                                    </div>
                                 </div>
-                            </div>
-                        </button>
+                            </button>
 
-                        <button
-                            type="button"
-                            className="q_option_link"
-                            onClick={() => setService("logo_website")}
-                        >
-                            <div className="q_option">
-                                <h3>Logo & Webseite</h3>
-                                <div className="logodiv">
-                                    <img src="/shield.svg" alt="Logo" />
-                                    <p>&</p>
-                                    <img src="/world.svg" alt="Website Logo" />
+                            <button
+                                type="button"
+                                className="q_option_link"
+                                onClick={() => setService("logo_website")}
+                            >
+                                <div className="q_option">
+                                    <h3>Logo & Webseite</h3>
+                                    <div className="logodiv">
+                                        <img src="/shield.svg" alt="Logo" />
+                                        <p>&</p>
+                                        <img src="/world.svg" alt="Website Logo" />
+                                    </div>
                                 </div>
-                            </div>
-                        </button>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </section>
-        );
+                </section>
+            );
+        }
     }
 }
 
