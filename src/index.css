@@ -588,12 +588,6 @@ body {
     text-shadow: 0 3px 5px rgba(0, 0, 0, 0.233);
 }
 
-.progressbar_outer {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
 .progressbar_wrapper {
     width: min(65%, 800px);
 }
@@ -613,6 +607,10 @@ body {
     background: rgba(121, 121, 121, 0.26);
     border-radius: 999px;
     overflow: hidden;
+}
+
+#root {
+    margin-top: 3vw;
 }
 
 .progressbar_center_text {

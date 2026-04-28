@@ -11,7 +11,7 @@ function LogoBudget({
     return (
         <div className="questformcontent">
             <div className="question">
-                <h2>Was ist ihr Budget?</h2>
+                <h2>Was ist ihr Budget fürs Logo?</h2>
             </div>
 
             <form className="budget_form" action="">

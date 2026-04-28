@@ -15,10 +15,12 @@ import LogoBudget from "./logobudget.tsx";
 import LogoBranche from "./logobranche.tsx";
 import LogoContact from "./logocontact.tsx";
 import LogoLast from "./logo_last.tsx";
+import LogoWebsiteLast from "./logo_website_last.tsx";
 
-type Service = "start" | "logo" | "logo_last" | "website" | "website_last" | "logo_website";
+type Service = "start" | "logo" | "logo_last" | "website" | "website_last" | "logo_website" | "logo_website_last";
 
 function Steps() {
+
     const [service, setService] = useState<Service>("start");
     const [websiteStepIndex, setWebsiteStepIndex] = useState(0);
     const [goals, setGoals] = useState<string[]>([]);
@@ -41,7 +43,7 @@ function Steps() {
     const [logoBudget, setLogoBudget] = useState("");
     const [logoBranche, setLogoBranche] = useState("");
     const [logoBrancheDesc, setLogoBrancheDesc] = useState("");
-
+    const [logoWebsiteStepIndex, setLogoWebsiteStepIndex] = useState(0);
 
     async function sendWebsiteRequest() {
 
@@ -85,6 +87,33 @@ function Steps() {
                 logoOptions,
                 logoStyle: logoStyle.join(", "),
                 logoBudget,
+            }),
+        });
+        return await response.json()
+    }
+
+    async function sendLogoWebsiteRequest() {
+        const response = await fetch("http://localhost/formular_2/send-logo-website-mail.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                logoOptions,
+                logoStyle: logoStyle.join(", "),
+                logoBudget,
+                logoBranche,
+                logoBrancheDesc,
+                goals: goals.join(", "),
+                existingWebsite,
+                websitePages: websitePages.join(", "),
+                websiteAssets,
+                websiteBudget,
+                websiteTimeframe,
+                name,
+                email,
+                phone,
             }),
         });
         return await response.json()
@@ -169,7 +198,71 @@ function Steps() {
             email={email}
             setEmail={setEmail}
         />
-    ]
+    ];
+
+    const logoWebsiteSteps = [
+        <LogoFirst
+            key="logofirst"
+            logoOptions={logoOptions}
+            setLogoOptions={setLogoOptions}
+        />,
+        <LogoStyle
+            key="logostyle"
+            logoStyle={logoStyle}
+            setLogoStyle={setLogoStyle}
+        />,
+        <LogoBudget
+            key="logobudget"
+            logoBudget={logoBudget}
+            setLogoBudget={setLogoBudget}
+        />,
+        <LogoBranche
+            key="logobranche"
+            logoBranche={logoBranche}
+            setLogoBranche={setLogoBranche}
+            logoBrancheDesc={logoBrancheDesc}
+            setLogoBrancheDesc={setLogoBrancheDesc}
+        />,
+        <WebsiteQuestions
+            key="website-goals"
+            goals={goals}
+            setGoals={setGoals}
+        />,
+        <WebsiteExisting
+            key="website-existing"
+            existingWebsite={existingWebsite}
+            setExistingWebsite={setExistingWebsite}
+        />,
+        <WebsitePages
+            key="website-pages"
+            websitePages={websitePages}
+            setWebsitePages={setWebsitePages}
+        />,
+        <WebsiteAssets
+            key="website-assets"
+            websiteAssets={websiteAssets}
+            setWebsiteAssets={setWebsiteAssets}
+        />,
+        <WebsiteBudget
+            key="website-budget"
+            websiteBudget={websiteBudget}
+            setWebsiteBudget={setWebsiteBudget}
+        />,
+        <WebsiteTimeframe
+            key="website-timeframe"
+            websiteTimeframe={websiteTimeframe}
+            setWebsiteTimeframe={setWebsiteTimeframe}
+        />,
+        <LogoContact
+            key="logocontact"
+            name={name}
+            setName={setName}
+            phone={phone}
+            setPhone={setPhone}
+            email={email}
+            setEmail={setEmail}
+        />
+    ];
 
 
     switch (service) {
@@ -183,12 +276,11 @@ function Steps() {
                             <h1>Logo</h1>
                         </div>
                         {logoSteps[logoStepIndex]}
-                        <div className="progressbar_outer">
-                            <ProgressBar
-                                currentStep={logoStepIndex}
-                                totalSteps={logoSteps.length}
-                            />
-                        </div>
+
+                        <ProgressBar
+                            currentStep={logoStepIndex}
+                            totalSteps={logoSteps.length}
+                        />
                         <div className="q_options">
                             <button
                                 type="button"
@@ -525,6 +617,9 @@ function Steps() {
         }
 
         case "logo_website": {
+            let isFirstStep = logoWebsiteStepIndex === 0;
+            let isLastStep = logoWebsiteStepIndex === logoWebsiteSteps.length - 1;
+
             return (
                 <section className="questionform">
                     <div className="questformcontent">
@@ -532,20 +627,192 @@ function Steps() {
                             <h1>Logo & Webseite</h1>
                         </div>
 
+                        {logoWebsiteSteps[logoWebsiteStepIndex]}
+
+                        <ProgressBar
+                            currentStep={logoWebsiteStepIndex}
+                            totalSteps={logoWebsiteSteps.length}
+                        />
                         <div className="q_options">
                             <button
                                 type="button"
                                 className="step_button"
-                                onClick={() => setService("start")}
+                                onClick={() => {
+
+                                    if (isFirstStep) {
+                                        setService("start");
+                                    } else {
+                                        setLogoWebsiteStepIndex((prev) => prev - 1);
+                                    }
+                                }}
                             >
                                 <div><h5>Zurück</h5></div>
                             </button>
+
+                            <button
+                                type="button"
+                                className="step_button"
+                                onClick={() => {
+                                    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                                    const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
+
+                                    if (logoWebsiteStepIndex === 0 && logoOptions === "") {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 1 && logoStyle.length === 0) {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 2 && logoBudget === "") {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 3 && (logoBranche === "" || logoBrancheDesc === "")) {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 4 && goals.length === 0) {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 5 && existingWebsite === "") {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 6 && websitePages.length === 0) {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 7 && websiteAssets === "") {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 8 && websiteBudget === "") {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 9 && websiteTimeframe === "") {
+                                        return;
+                                    }
+                                    if (logoWebsiteStepIndex === 10 && (name === "" || email === "" || phone === "")) {
+                                        return;
+                                    }
+                                    if (isLastStep) {
+                                        console.log({
+                                            goals,
+                                            existingWebsite,
+                                            websitePages,
+                                            websiteAssets,
+                                            websiteBudget,
+                                            websiteTimeframe,
+                                            name,
+                                            company,
+                                            email,
+                                            phone,
+                                            message,
+                                        });
+                                        setService("logo_website_last");
+                                    } else {
+                                        setLogoWebsiteStepIndex((prev) => prev + 1);
+                                    }
+                                }}
+                            >
+                                <div><h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5></div>
+                            </button>
                         </div>
+
                     </div>
-                </section>
+                </section >
             );
         }
 
+        case "logo_website_last": {
+            return (
+                <>
+                    <section className="questionform">
+                        <div className="questformcontent">
+                            <LogoWebsiteLast
+                                logoOptions={logoOptions}
+                                logoStyle={logoStyle}
+                                logoBudget={logoBudget}
+                                logoBranche={logoBranche}
+                                logoBrancheDesc={logoBrancheDesc}
+                                goals={goals}
+                                existingWebsite={existingWebsite}
+                                websitePages={websitePages}
+                                websiteAssets={websiteAssets}
+                                websiteBudget={websiteBudget}
+                                websiteTimeframe={websiteTimeframe}
+                                name={name}
+                                email={email}
+                                phone={phone}
+                            />
+                            <div className="progressbar_outer">
+                                <ProgressBar
+                                    currentStep={logoWebsiteStepIndex}
+                                    totalSteps={logoWebsiteSteps.length}
+                                />
+                            </div>
+                            <div className="q_options">
+                                {submitError && <p className="contact_error">{submitError}</p>}
+                                <button
+                                    type="button"
+                                    className="step_button"
+                                    onClick={() => setService("logo_website")}
+                                >
+                                    <div><h5>Zurück</h5></div>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="step_button"
+                                    disabled={isSubmitting}
+                                    onClick={async () => {
+                                        try {
+                                            setIsSubmitting(true);
+                                            setSubmitError("");
+
+                                            const result = await sendLogoWebsiteRequest();
+
+                                            if (result.success) {
+                                                await Swal.fire({
+                                                    title: "Nachricht gesendet!",
+                                                    text: "Vielen Dank für Ihre Anfrage.",
+                                                    icon: "success",
+                                                    confirmButtonText: "Okay",
+                                                    background: "#f5f5f5",
+                                                    color: "#222222",
+                                                    confirmButtonColor: "#2f810e",
+                                                });
+
+                                                setService("start");
+                                                setLogoWebsiteStepIndex(0);
+
+                                                setGoals([]);
+                                                setExistingWebsite("");
+                                                setWebsitePages([]);
+                                                setWebsiteAssets("");
+                                                setWebsiteBudget("");
+                                                setWebsiteTimeframe("");
+                                                setName("");
+                                                setLogoBranche("");
+                                                setLogoBrancheDesc("");
+                                                setLogoOptions("");
+                                                setLogoStyle([]);
+                                                setLogoBudget("");
+                                                setEmail("");
+                                                setPhone("");
+                                                setContactError("");
+                                            } else {
+                                                setSubmitError(result.message || "Die Anfrage konnte nicht gesendet werden.");
+                                            }
+                                        } catch (error) {
+                                            console.error(error);
+                                            setSubmitError("Beim Senden ist ein Fehler aufgetreten.");
+                                        } finally {
+                                            setIsSubmitting(false);
+                                        }
+                                    }}
+                                >
+                                    <div><h5>{isSubmitting ? "Wird gesendet..." : "Anfrage senden"}</h5></div>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            );
+        }
         case "start":
         default: {
             return (

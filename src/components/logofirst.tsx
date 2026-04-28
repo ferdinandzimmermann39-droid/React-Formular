@@ -13,7 +13,7 @@ function LogoFirst({ logoOptions, setLogoOptions }: logoOptionsProps) {
     return (
         <>
             <div className="question">
-                <h2>Was benötigen Sie?</h2>
+                <h2>Neues Logo oder Überarbeiten?</h2>
             </div>
             <div className="single_choice_list">
                 {options.map((option) => (

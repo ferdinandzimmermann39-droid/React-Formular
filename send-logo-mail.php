@@ -92,13 +92,13 @@ try {
     $mail->addAddress($config['mail_to']);
     $mail->addReplyTo($email, $name);
 
-    $mail->Subject = 'Neue Website-Anfrage von ' . $name;
+    $mail->Subject = 'Neue Logo-Anfrage von ' . $name;
     $mail->Body = '
     <!DOCTYPE html>
     <html lang="de">
     <head>
         <meta charset="UTF-8">
-        <title>Neue Website-Anfrage</title>
+        <title>Neue Logo-Anfrage</title>
     </head>
     <body style="margin:0; padding:0; background:#f5f7f6; font-family:Arial, Helvetica, sans-serif; color:#e5e7eb;">
         <div style="max-width:720px; margin:0 auto; padding:22px 10px;">
@@ -175,6 +175,10 @@ try {
                         <tr>
                             <td style="padding:8px 0; color:#9ca3af; font-size:13px;">Gewünschter Style</td>
                             <td style="padding:8px 0; color:#e5e7eb; font-size:13px;">' . htmlspecialchars($logostyle, ENT_QUOTES, 'UTF-8') . '</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px 0; color:#9ca3af; font-size:13px;">Budget</td>
+                            <td style="padding:8px 0; color:#e5e7eb; font-size:13px;">' . htmlspecialchars($logobudget, ENT_QUOTES, 'UTF-8') . '</td>
                         </tr>
                     </table>
 

@@ -26,6 +26,3 @@ dist-ssr
 config.php
 .env
 
-# Composer
-/vendor/
-composer.lock

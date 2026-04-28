@@ -11,7 +11,7 @@ function WebsiteBudget({
     return (
         <div className="questformcontent">
             <div className="question">
-                <h2>Was ist ihr Budget?</h2>
+                <h2>Was ist ihr Budget für die Website?</h2>
             </div>
 
             <form className="budget_form" action="">
