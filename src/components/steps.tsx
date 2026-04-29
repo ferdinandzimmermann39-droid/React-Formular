@@ -120,148 +120,309 @@ function Steps() {
     }
 
     const websiteSteps = [
-        <WebsiteQuestions
-            key="website-goals"
-            goals={goals}
-            setGoals={setGoals}
-        />,
-        <WebsiteExisting
-            key="website-existing"
-            existingWebsite={existingWebsite}
-            setExistingWebsite={setExistingWebsite}
-        />,
-        <WebsitePages
-            key="website-pages"
-            websitePages={websitePages}
-            setWebsitePages={setWebsitePages}
-        />,
-        <WebsiteAssets
-            key="website-assets"
-            websiteAssets={websiteAssets}
-            setWebsiteAssets={setWebsiteAssets}
-        />,
-        <WebsiteBudget
-            key="website-budget"
-            websiteBudget={websiteBudget}
-            setWebsiteBudget={setWebsiteBudget}
-        />,
-        <WebsiteTimeframe
-            key="website-timeframe"
-            websiteTimeframe={websiteTimeframe}
-            setWebsiteTimeframe={setWebsiteTimeframe}
-        />,
-        <WebsiteContact
-            name={name}
-            setName={setName}
-            company={company}
-            setCompany={setCompany}
-            email={email}
-            setEmail={setEmail}
-            phone={phone}
-            setPhone={setPhone}
-            message={message}
-            setMessage={setMessage}
-            contactError={contactError}
-            setContactError={setContactError}
-        />
+        {
+            component: (
+                <WebsiteQuestions
+                    goals={goals}
+                    setGoals={setGoals}
+                />
+            ),
+            isValid: () => goals.length > 0,
+        },
+        {
+            component: (
+                <WebsiteExisting
+                    existingWebsite={existingWebsite}
+                    setExistingWebsite={setExistingWebsite}
+                />
+            ),
+            isValid: () => existingWebsite.trim() !== "",
+        },
+        {
+            component: (
+                <WebsitePages
+                    websitePages={websitePages}
+                    setWebsitePages={setWebsitePages}
+                />
+            ),
+            isValid: () => websitePages.length > 0,
+        },
+        {
+            component: (
+                <WebsiteAssets
+                    websiteAssets={websiteAssets}
+                    setWebsiteAssets={setWebsiteAssets}
+                />
+            ),
+            isValid: () => websiteAssets.trim() !== "",
+        },
+        {
+            component: (
+                <WebsiteBudget
+                    websiteBudget={websiteBudget}
+                    setWebsiteBudget={setWebsiteBudget}
+                />
+            ),
+            isValid: () => websiteBudget.trim() !== "",
+        },
+        {
+            component: (
+                <WebsiteTimeframe
+                    websiteTimeframe={websiteTimeframe}
+                    setWebsiteTimeframe={setWebsiteTimeframe}
+                />
+            ),
+            isValid: () => websiteTimeframe.trim() !== "",
+        },
+        {
+            component: (
+                <WebsiteContact
+                    name={name}
+                    setName={setName}
+                    company={company}
+                    setCompany={setCompany}
+                    email={email}
+                    setEmail={setEmail}
+                    phone={phone}
+                    setPhone={setPhone}
+                    message={message}
+                    setMessage={setMessage}
+                    contactError={contactError}
+                    setContactError={setContactError}
+                />
+            ),
+            isValid: () => {
+                const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
+
+                if (
+                    name.trim() === "" ||
+                    company.trim() === "" ||
+                    email.trim() === "" ||
+                    phone.trim() === ""
+                ) {
+                    setContactError("Bitte füllen Sie alle Pflichtfelder aus.");
+                    return false;
+                }
+
+                if (!emailIsValid) {
+                    setContactError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+                    return false;
+                }
+
+                if (!phoneIsValid) {
+                    setContactError("Bitte geben Sie eine gültige Telefonnummer ein.");
+                    return false;
+                }
+
+                setContactError("");
+                return true;
+            },
+        },
     ];
 
     const logoSteps = [
-        <LogoFirst
-            key="logofirst"
-            logoOptions={logoOptions}
-            setLogoOptions={setLogoOptions}
-        />,
-        <LogoStyle
-            key="logostyle"
-            logoStyle={logoStyle}
-            setLogoStyle={setLogoStyle}
-        />,
-        <LogoBudget
-            key="logobudget"
-            logoBudget={logoBudget}
-            setLogoBudget={setLogoBudget}
-        />,
-        <LogoBranche
-            key="logobranche"
-            logoBranche={logoBranche}
-            setLogoBranche={setLogoBranche}
-            logoBrancheDesc={logoBrancheDesc}
-            setLogoBrancheDesc={setLogoBrancheDesc}
-        />,
-        <LogoContact
-            key="logocontact"
-            name={name}
-            setName={setName}
-            phone={phone}
-            setPhone={setPhone}
-            email={email}
-            setEmail={setEmail}
-        />
+        {
+            component: (
+                <LogoFirst
+                    logoOptions={logoOptions}
+                    setLogoOptions={setLogoOptions}
+                />
+            ),
+            isValid: () => logoOptions.trim() !== "",
+        },
+        {
+            component: (
+                <LogoStyle
+                    logoStyle={logoStyle}
+                    setLogoStyle={setLogoStyle}
+                />
+            ),
+            isValid: () => logoStyle.length > 0,
+        },
+        {
+            component: (
+                <LogoBudget
+                    logoBudget={logoBudget}
+                    setLogoBudget={setLogoBudget}
+                />
+            ),
+            isValid: () => logoBudget.trim() !== "",
+        },
+        {
+            component: (
+                <LogoBranche
+                    logoBranche={logoBranche}
+                    setLogoBranche={setLogoBranche}
+                    logoBrancheDesc={logoBrancheDesc}
+                    setLogoBrancheDesc={setLogoBrancheDesc}
+                />
+            ),
+            isValid: () =>
+                logoBranche.trim() !== "" &&
+                logoBrancheDesc.trim() !== "",
+        },
+        {
+            component: (
+                <LogoContact
+                    name={name}
+                    setName={setName}
+                    phone={phone}
+                    setPhone={setPhone}
+                    email={email}
+                    setEmail={setEmail}
+                    contactError={contactError}
+                    setContactError={setContactError}
+                />
+            ),
+            isValid: () => {
+                const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
+
+                if (
+                    name.trim() === "" ||
+                    email.trim() === "" ||
+                    phone.trim() === ""
+                ) {
+                    setContactError("Bitte füllen Sie alle Pflichtfelder aus.");
+                    return false;
+                }
+
+                if (!emailIsValid) {
+                    setContactError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
+                    return false;
+                }
+
+                if (!phoneIsValid) {
+                    setContactError("Bitte geben Sie eine gültige Telefonnummer ein.");
+                    return false;
+                }
+
+                setContactError("");
+                return true;
+            },
+        },
     ];
 
     const logoWebsiteSteps = [
-        <LogoFirst
-            key="logofirst"
-            logoOptions={logoOptions}
-            setLogoOptions={setLogoOptions}
-        />,
-        <LogoStyle
-            key="logostyle"
-            logoStyle={logoStyle}
-            setLogoStyle={setLogoStyle}
-        />,
-        <LogoBudget
-            key="logobudget"
-            logoBudget={logoBudget}
-            setLogoBudget={setLogoBudget}
-        />,
-        <LogoBranche
-            key="logobranche"
-            logoBranche={logoBranche}
-            setLogoBranche={setLogoBranche}
-            logoBrancheDesc={logoBrancheDesc}
-            setLogoBrancheDesc={setLogoBrancheDesc}
-        />,
-        <WebsiteQuestions
-            key="website-goals"
-            goals={goals}
-            setGoals={setGoals}
-        />,
-        <WebsiteExisting
-            key="website-existing"
-            existingWebsite={existingWebsite}
-            setExistingWebsite={setExistingWebsite}
-        />,
-        <WebsitePages
-            key="website-pages"
-            websitePages={websitePages}
-            setWebsitePages={setWebsitePages}
-        />,
-        <WebsiteAssets
-            key="website-assets"
-            websiteAssets={websiteAssets}
-            setWebsiteAssets={setWebsiteAssets}
-        />,
-        <WebsiteBudget
-            key="website-budget"
-            websiteBudget={websiteBudget}
-            setWebsiteBudget={setWebsiteBudget}
-        />,
-        <WebsiteTimeframe
-            key="website-timeframe"
-            websiteTimeframe={websiteTimeframe}
-            setWebsiteTimeframe={setWebsiteTimeframe}
-        />,
-        <LogoContact
-            key="logocontact"
-            name={name}
-            setName={setName}
-            phone={phone}
-            setPhone={setPhone}
-            email={email}
-            setEmail={setEmail}
-        />
+        {
+            component: (
+                <LogoFirst
+                    logoOptions={logoOptions}
+                    setLogoOptions={setLogoOptions}
+                />
+            ),
+            isValid: () => logoOptions.trim() !== "",
+        },
+        {
+            component: (
+                <LogoStyle
+                    logoStyle={logoStyle}
+                    setLogoStyle={setLogoStyle}
+                />
+            ),
+            isValid: () => logoStyle.length > 0,
+        },
+        {
+            component: (
+                <LogoBudget
+                    logoBudget={logoBudget}
+                    setLogoBudget={setLogoBudget}
+                />
+            ),
+            isValid: () => logoBudget.trim() !== "",
+        },
+        {
+            component: (
+                <LogoBranche
+                    logoBranche={logoBranche}
+                    setLogoBranche={setLogoBranche}
+                    logoBrancheDesc={logoBrancheDesc}
+                    setLogoBrancheDesc={setLogoBrancheDesc}
+                />
+            ),
+            isValid: () =>
+                logoBranche.trim() !== "" &&
+                logoBrancheDesc.trim() !== "",
+        },
+        {
+            component: (
+                <WebsiteQuestions
+                    goals={goals}
+                    setGoals={setGoals}
+                />
+            ),
+            isValid: () => goals.length > 0,
+        },
+        {
+            component: (
+                <WebsiteExisting
+                    existingWebsite={existingWebsite}
+                    setExistingWebsite={setExistingWebsite}
+                />
+            ),
+            isValid: () => existingWebsite.trim() !== "",
+        },
+        {
+            component: (
+                <WebsitePages
+                    websitePages={websitePages}
+                    setWebsitePages={setWebsitePages}
+                />
+            ),
+            isValid: () => websitePages.length > 0,
+        },
+        {
+            component: (
+                <WebsiteAssets
+                    websiteAssets={websiteAssets}
+                    setWebsiteAssets={setWebsiteAssets}
+                />
+            ),
+            isValid: () => websiteAssets.trim() !== "",
+        },
+        {
+            component: (
+                <WebsiteBudget
+                    websiteBudget={websiteBudget}
+                    setWebsiteBudget={setWebsiteBudget}
+                />
+            ),
+            isValid: () => websiteBudget.trim() !== "",
+        },
+        {
+            component: (
+                <WebsiteTimeframe
+                    websiteTimeframe={websiteTimeframe}
+                    setWebsiteTimeframe={setWebsiteTimeframe}
+                />
+            ),
+            isValid: () => websiteTimeframe.trim() !== "",
+        },
+        {
+            component: (
+                <LogoContact
+                    name={name}
+                    setName={setName}
+                    phone={phone}
+                    setPhone={setPhone}
+                    email={email}
+                    setEmail={setEmail}
+                    contactError={contactError}
+                    setContactError={setContactError}
+                />
+            ),
+            isValid: () => {
+                const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
+
+                return (
+                    name.trim() !== "" &&
+                    emailIsValid &&
+                    phoneIsValid
+                );
+            },
+        },
     ];
 
 
@@ -269,18 +430,22 @@ function Steps() {
         case "logo": {
             const isFirstStep = logoStepIndex === 0;
             const isLastStep = logoStepIndex === logoSteps.length - 1;
+            const currentStep = logoSteps[logoStepIndex];
+
             return (
                 <section className="questionform">
                     <div className="questformcontent">
                         <div className="question">
                             <h1>Logo</h1>
                         </div>
-                        {logoSteps[logoStepIndex]}
+
+                        {currentStep.component}
 
                         <ProgressBar
                             currentStep={logoStepIndex}
                             totalSteps={logoSteps.length}
                         />
+
                         <div className="q_options">
                             <button
                                 type="button"
@@ -295,35 +460,27 @@ function Steps() {
                             >
                                 <div><h5>Zurück</h5></div>
                             </button>
-                            <button className="step_button"
+
+                            <button
+                                className="step_button"
                                 type="button"
                                 onClick={() => {
-                                    if (logoStepIndex === 0 && logoOptions === "") {
+                                    if (!currentStep.isValid()) {
                                         return;
                                     }
-                                    if (logoStepIndex === 1 && logoStyle.length === 0) {
-                                        return;
-                                    }
-                                    if (logoStepIndex === 2 && logoBudget === "") {
-                                        return;
-                                    }
-                                    if (logoStepIndex === 3 && (logoBranche === "" || logoBrancheDesc === "")) {
-                                        return;
-                                    }
-                                    if (logoStepIndex === 4 && (name === "" || email === "" || phone === "")) {
-                                        return;
-                                    }
+
                                     if (isLastStep) {
                                         setService("logo_last");
                                     } else {
                                         setLogoStepIndex((prev) => prev + 1);
                                     }
-                                }
-                                }
-                            ><h5>Weiter</h5></button>
+                                }}
+                            >
+                                <h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5>
+                            </button>
                         </div>
                     </div>
-                </section >
+                </section>
             );
         }
 
@@ -412,8 +569,9 @@ function Steps() {
         }
 
         case "website": {
-            let isFirstStep = websiteStepIndex === 0;
-            let isLastStep = websiteStepIndex === websiteSteps.length - 1;
+            const isFirstStep = websiteStepIndex === 0;
+            const isLastStep = websiteStepIndex === websiteSteps.length - 1;
+            const currentStep = websiteSteps[websiteStepIndex];
 
             return (
                 <section className="questionform">
@@ -422,18 +580,18 @@ function Steps() {
                             <h1>Webseite</h1>
                         </div>
 
-                        {websiteSteps[websiteStepIndex]}
+                        {currentStep.component}
 
                         <ProgressBar
                             currentStep={websiteStepIndex}
                             totalSteps={websiteSteps.length}
                         />
+
                         <div className="q_options">
                             <button
                                 type="button"
                                 className="step_button"
                                 onClick={() => {
-
                                     if (isFirstStep) {
                                         setService("start");
                                     } else {
@@ -448,71 +606,11 @@ function Steps() {
                                 type="button"
                                 className="step_button"
                                 onClick={() => {
-                                    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-                                    const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
-
-                                    if (websiteStepIndex === 0 && goals.length === 0) {
+                                    if (!currentStep.isValid()) {
                                         return;
-                                    }
-
-                                    if (websiteStepIndex === 1 && existingWebsite === "") {
-                                        return;
-                                    }
-
-                                    if (websiteStepIndex === 2 && websitePages.length === 0) {
-                                        return;
-                                    }
-
-                                    if (websiteStepIndex === 3 && websiteAssets === "") {
-                                        return;
-                                    }
-
-                                    if (websiteStepIndex === 4 && websiteBudget === "") {
-                                        return;
-                                    }
-
-                                    if (websiteStepIndex === 5 && websiteTimeframe === "") {
-                                        return;
-                                    }
-
-                                    if (websiteStepIndex === 6) {
-                                        if (
-                                            name.trim() === "" ||
-                                            company.trim() === "" ||
-                                            email.trim() === "" ||
-                                            phone.trim() === ""
-                                        ) {
-                                            setContactError("Bitte füllen Sie alle Pflichtfelder aus.");
-                                            return;
-                                        }
-
-                                        if (!emailIsValid) {
-                                            setContactError("Bitte geben Sie eine gültige E-Mail-Adresse ein.");
-                                            return;
-                                        }
-
-                                        if (!phoneIsValid) {
-                                            setContactError("Bitte geben Sie eine gültige Telefonnummer ein.");
-                                            return;
-                                        }
-
-                                        setContactError("");
                                     }
 
                                     if (isLastStep) {
-                                        console.log({
-                                            goals,
-                                            existingWebsite,
-                                            websitePages,
-                                            websiteAssets,
-                                            websiteBudget,
-                                            websiteTimeframe,
-                                            name,
-                                            company,
-                                            email,
-                                            phone,
-                                            message,
-                                        });
                                         setService("website_last");
                                     } else {
                                         setWebsiteStepIndex((prev) => prev + 1);
@@ -522,9 +620,8 @@ function Steps() {
                                 <div><h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5></div>
                             </button>
                         </div>
-
                     </div>
-                </section >
+                </section>
             );
         }
 
@@ -617,8 +714,9 @@ function Steps() {
         }
 
         case "logo_website": {
-            let isFirstStep = logoWebsiteStepIndex === 0;
-            let isLastStep = logoWebsiteStepIndex === logoWebsiteSteps.length - 1;
+            const isFirstStep = logoWebsiteStepIndex === 0;
+            const isLastStep = logoWebsiteStepIndex === logoWebsiteSteps.length - 1;
+            const currentStep = logoWebsiteSteps[logoWebsiteStepIndex];
 
             return (
                 <section className="questionform">
@@ -627,18 +725,18 @@ function Steps() {
                             <h1>Logo & Webseite</h1>
                         </div>
 
-                        {logoWebsiteSteps[logoWebsiteStepIndex]}
+                        {currentStep.component}
 
                         <ProgressBar
                             currentStep={logoWebsiteStepIndex}
                             totalSteps={logoWebsiteSteps.length}
                         />
+
                         <div className="q_options">
                             <button
                                 type="button"
                                 className="step_button"
                                 onClick={() => {
-
                                     if (isFirstStep) {
                                         setService("start");
                                     } else {
@@ -653,56 +751,11 @@ function Steps() {
                                 type="button"
                                 className="step_button"
                                 onClick={() => {
-                                    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-                                    const phoneIsValid = /^[0-9+\s()/.-]{6,}$/.test(phone);
+                                    if (!currentStep.isValid()) {
+                                        return;
+                                    }
 
-                                    if (logoWebsiteStepIndex === 0 && logoOptions === "") {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 1 && logoStyle.length === 0) {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 2 && logoBudget === "") {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 3 && (logoBranche === "" || logoBrancheDesc === "")) {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 4 && goals.length === 0) {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 5 && existingWebsite === "") {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 6 && websitePages.length === 0) {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 7 && websiteAssets === "") {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 8 && websiteBudget === "") {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 9 && websiteTimeframe === "") {
-                                        return;
-                                    }
-                                    if (logoWebsiteStepIndex === 10 && (name === "" || email === "" || phone === "")) {
-                                        return;
-                                    }
                                     if (isLastStep) {
-                                        console.log({
-                                            goals,
-                                            existingWebsite,
-                                            websitePages,
-                                            websiteAssets,
-                                            websiteBudget,
-                                            websiteTimeframe,
-                                            name,
-                                            company,
-                                            email,
-                                            phone,
-                                            message,
-                                        });
                                         setService("logo_website_last");
                                     } else {
                                         setLogoWebsiteStepIndex((prev) => prev + 1);
@@ -712,9 +765,8 @@ function Steps() {
                                 <div><h5>{isLastStep ? "Anfrage vorbereiten" : "Weiter"}</h5></div>
                             </button>
                         </div>
-
                     </div>
-                </section >
+                </section>
             );
         }
 
